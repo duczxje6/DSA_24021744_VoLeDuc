@@ -78,7 +78,6 @@ int main() {
     l.insertF(5) ;
     l.insertF(3) ;
     l.insertF(1) ;
-    // In ngược
     cout << "Duyet xuoi: ";
     l.printF(); cout << endl;
 
