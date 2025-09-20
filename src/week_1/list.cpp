@@ -2,7 +2,7 @@
 using namespace std;
 struct List {
     int size;  
-    int a[] ;
+    int a[100] ;
 
     // Truy cập
     int Search (int index){
@@ -12,7 +12,7 @@ struct List {
     // Chèn phần tử vào đầu
     void insertF (int data){
         size += 1;
-        for(int i=0; i<size-1; i++){
+        for(int i=size-1; i>=0; i--){
             a[i+1] = a[i];
         }
         a[0] = data;
@@ -27,7 +27,7 @@ struct List {
     // Chèn vào vị trí i 
     void insert (int data, int index){
         size += 1;
-        for (int i=size-2; i>index ;i--){
+        for (int i=size-2; i>=index ;i--){
             a[i+1] = a[i];
         }
         a[index] = data;
@@ -71,8 +71,6 @@ struct List {
 int main() {
     List l; 
     l.size = 0;
-    cout<<"size = ";
-    cin >> l.size ;
     l.insertF(7) ;
     l.insertF(0) ;
     l.insertF(5) ;
@@ -80,7 +78,35 @@ int main() {
     l.insertF(1) ;
     cout << "Duyet xuoi: ";
     l.printF(); cout << endl;
+    cout << "Duyet nguoc: ";
+    l.printB(); cout << endl;
 
+    l.insertL(9);
+    cout << "Duyet xuoi sau khi them 9 cuoi: ";
+    l.printF(); cout << endl;
+
+    l.insert(6,2);
+    cout << "Duyet xuoi sau khi them 6 vao vi tri 2: ";
+    l.printF(); cout << endl;
+
+  
+
+    l.deleteL();
+    l.deleteL();
+    cout << "Duyet xuoi sau khi xoa cuoi: ";
+    l.printF(); cout << endl;
+
+    
+
+    l.deletE(2);
+    cout << "Duyet xuoi sau khi xoa tai vi tri 2: ";
+    l.printF(); cout << endl;
+
+    l.deleteF();
+    cout << "Duyet xuoi sau khi xoa dau: ";
+    l.printF(); cout << endl;
+
+    
     return 0;
    
 
