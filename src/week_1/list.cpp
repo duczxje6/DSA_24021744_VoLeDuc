@@ -68,7 +68,7 @@ struct List {
         }
     }
 };
-int main() {
+int main() { 
     List l; 
     l.size = 0;
     l.insertF(7) ;
