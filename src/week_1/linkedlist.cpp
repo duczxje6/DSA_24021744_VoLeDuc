@@ -7,7 +7,13 @@ struct Node {
 class LinkedList {
 private:
     Node* head; 
-    int value;
+    void printBackward(Node *q){
+        if(q == NULL){
+            return;
+        }
+        printBackward(q->next);
+        cout<<q->data<< " ";
+    }
 public: 
     LinkedList() {
         head = NULL;
@@ -25,7 +31,7 @@ public:
     void insertF (int data){
         Node *q;
         q = new Node;
-        q ->data = value;
+        q ->data = data ;
         q ->next = head;
         head = q;
     }
@@ -35,11 +41,12 @@ public:
         Node *q;
         Node *current = head;
         q = new Node;
-        q ->data = value;
-        while (current != NULL){
+        q ->data = data;
+        q ->next = NULL; 
+        while (current->next != NULL){
             current = current ->next;
         }
-        current ->next = q;     
+        current->next = q;     
     }
 
     // Chèn vào vị trí i 
@@ -47,7 +54,7 @@ public:
         Node *q;
         Node *current = head;
         q = new Node;
-        q ->data = value;
+        q ->data = data;
         for (int i=1; i<index-1; i++){
             current = current ->next;
         }
@@ -65,10 +72,11 @@ public:
     // Xóa phần tử cuối
     void deleteL (){
         Node *current = head;
-        while (current !=NULL){
+        while (current->next !=NULL){
             current = current->next;
         }
         delete current;
+        
     }
 
     // Xóa vị trí i
@@ -88,14 +96,14 @@ public:
     void printF(){
         Node *current = head;
         while(current != NULL){
+            cout<< current->data<<" ";
             current = current->next;
-            cout<< current->data;
         }
     }
 
     // Duyệt ngược
     void printB(){
-
+        printBackward(head);
     }
 
 };
@@ -110,24 +118,25 @@ int main()
     list.insert(5, 2); 
 
     cout << "Danh sach hien tai: ";
-    list.printF(); 
+    list.printF(); cout <<endl;
+     
 
-    cout << "Duyet nguoc: ";
+   cout << "Duyet nguoc: ";
     list.printB(); 
 
     cout << "Phan tu tai index 2: " << list.search(2) << endl; 
 
     list.deleteF(); 
     cout << "Sau khi xoa dau: ";
-    list.printF();
+    list.printF(); cout <<endl;
 
     list.deleteL(); 
     cout << "Sau khi xoa cuoi: ";
-    list.printF();
+    list.printF(); cout <<endl;
 
     list.deletE(1); 
     cout << "Sau khi xoa index 1: ";
-    list.printF();
+    list.printF(); cout <<endl;
 
     return 0;
 }
