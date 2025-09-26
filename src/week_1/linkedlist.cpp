@@ -24,8 +24,15 @@ public:
         for (int i=0; i<index; i++){
             current = current ->next;
     }
-    return  current->data ;
+    return  current->data ;  
     }   
+    int searchLast (){
+        Node *current = head;
+        while (current ->next != NULL){
+            current = current->next;
+        }
+        return current->data;
+    }
 
     // Chèn phần tử vào đầu
     void insertF (int data){
@@ -63,19 +70,23 @@ public:
     }   
 
     // Xóa phần tử đầu
-    void deleteF (){
+    int deleteF (){
         Node *current = head;
         head = head->next;
+        int x = current->data;
         delete current;
+        return x;
     }
 
     // Xóa phần tử cuối
-    void deleteL (){
+    int deleteL (){
         Node *current = head;
         while (current->next !=NULL){
             current = current->next;
         }
+        int x = current->data;
         delete current;
+        return x;
         
     }
 
@@ -105,41 +116,92 @@ public:
     void printB(){
         printBackward(head);
     }
+     bool empty(){
+        return head == NULL;
+    }
+    
+};
+struct Stack{
+    LinkedList llist;
+    void Push(int item){
+        llist.insertL(item);
+    }
+    int pop(){
+       return llist.deleteL(); // xóa cuối trả về phần tử cuối   
+    }
+    int top(){
+        return llist.searchLast();
+    }
+    void print(){
+       llist.printF();
+    }
+    bool empty(){
+        return llist.empty();
+    }
+
+
+};
+struct Queue{
+    LinkedList llist;
+    void enqueue (int item){
+        llist.insertL(item);
+    }
+    int dequeue (){
+        return llist.deleteF();
+    }
+     void print(){
+        llist.printF();
+    }
+    bool empty(){
+        return llist.empty();
+    }
 
 };
 int main()
 {
+    // LinkedList demo
+   
     LinkedList list;
+    list.insertF(7);
+    list.insertF(3);
+    list.insertL(1);
+    list.insert(5, 2);
+    cout << "Danh sach: "; list.printF();
+    cout << "Duyet nguoc: "; list.printB();
 
-    // Thêm phần tử
-    list.insertF(7);   
-    list.insertF(3);   
-    list.insertL(1);   
-    list.insert(5, 2); 
+    cout << "Phan tu tai index 2: " << list.search(2) << endl;
 
-    cout << "Danh sach hien tai: ";
-    list.printF(); cout <<endl;
-     
+    list.deleteF();
+    cout << "Sau khi xoa dau: "; list.printF();
 
-   cout << "Duyet nguoc: ";
-    list.printB(); 
+    list.deleteL();
+    cout << "Sau khi xoa cuoi: "; list.printF();
 
-    cout << "Phan tu tai index 2: " << list.search(2) << endl; 
+    list.deletE(1);
+    cout << "Sau khi xoa index 1: "; list.printF();
 
-    list.deleteF(); 
-    cout << "Sau khi xoa dau: ";
-    list.printF(); cout <<endl;
+    // Stack demo
+    
+    Stack st;
+    st.Push(10);
+    st.Push(20);
+    st.Push(30);
+    cout << "Stack sau khi push 10,20,30: "; st.print();
+    cout << "Top = " << st.top() << endl;
+    cout << "Pop = " << st.pop() << endl;
+    cout << "Stack sau khi pop: "; st.print();
 
-    list.deleteL(); 
-    cout << "Sau khi xoa cuoi: ";
-    list.printF(); cout <<endl;
-
-    list.deletE(1); 
-    cout << "Sau khi xoa index 1: ";
-    list.printF(); cout <<endl;
+    // Queue demo
+    
+    Queue q;
+    q.enqueue(1);
+    q.enqueue(2);
+    q.enqueue(3);
+    cout << "Queue sau khi enqueue 1,2,3: "; q.print();
+    cout << "Dequeue = " << q.dequeue() << endl;
+    cout << "Queue sau khi dequeue: "; q.print();
 
     return 0;
 }
-
  
     
