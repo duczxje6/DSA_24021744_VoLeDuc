@@ -5,8 +5,8 @@ struct List {
     int a[100] ;
 
     // Truy cập
-    int Search (int index){
-        return a[index] ;
+    int search (int index){
+        return a[index] ;       // O[1]
     }
 
     // Chèn phần tử vào đầu
@@ -15,13 +15,13 @@ struct List {
         for(int i=size-1; i>=0; i--){
             a[i+1] = a[i];
         }
-        a[0] = data;
+        a[0] = data;            // O[n]
     }
 
     // Chèn phần tử vào cuối
     void insertL (int data){
         size += 1;
-        a[size-1] = data;
+        a[size-1] = data;       // O[1]
     }
 
     // Chèn vào vị trí i 
@@ -30,7 +30,7 @@ struct List {
         for (int i=size-2; i>=index ;i--){
             a[i+1] = a[i];
         }
-        a[index] = data;
+        a[index] = data;        // O[]
     }
 
     // Xóa phần tử đầu
@@ -42,8 +42,9 @@ struct List {
     }
 
     // Xóa phần tử cuối
-    void deleteL (){
-        size--; 
+    int deleteL (){
+         return a[size-1];
+         size--;
     }
 
     // Xóa vị trí i
@@ -67,6 +68,31 @@ struct List {
             cout<<a[i]<<" ";
         }
     }
+    
+};
+struct Stack {
+    List list;
+
+    void Push(int item){
+        list.insertL(item);
+    }
+    int pop(){
+       return list.deleteL(); // xóa cuối trả về phần tử cuối   
+    }
+    int top(){
+        return list.search(list.size);
+    }
+
+};
+struct Queue {
+    List list;
+    void enqueue (int item){
+        list.insertF(item);
+    }
+    int dequeue (){
+        return list.deleteL();
+    }
+
 };
 int main() { 
     List l; 
@@ -89,9 +115,6 @@ int main() {
     cout << "Duyet xuoi sau khi them 6 vao vi tri 2: ";
     l.printF(); cout << endl;
 
-  
-
-    l.deleteL();
     l.deleteL();
     cout << "Duyet xuoi sau khi xoa cuoi: ";
     l.printF(); cout << endl;
