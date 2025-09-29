@@ -19,14 +19,14 @@ public:
         head = NULL;
     }
     // Truy cập
-    int search (int index){
+    int search (int index){                   //O[n]
         Node *current = head;
         for (int i=0; i<index; i++){
-            current = current ->next;
+            current = current ->next;   
     }
     return  current->data ;  
     }   
-    int searchLast (){
+    int searchLast (){                        //O[n]
         Node *current = head;
         while (current ->next != NULL){
             current = current->next;
@@ -35,7 +35,7 @@ public:
     }
 
     // Chèn phần tử vào đầu
-    void insertF (int data){
+    void insertF (int data){                   //O[1]
         Node *q;
         q = new Node;
         q ->data = data ;
@@ -43,8 +43,8 @@ public:
         head = q;
     }
 
-    // Chèn phần tử vào cuối
-    void insertL (int data){
+    // Chèn phần tử vào cuối                    
+    void insertL (int data){                   //O[n]
         Node *q;
         Node *current = head;
         q = new Node;
@@ -57,7 +57,7 @@ public:
     }
 
     // Chèn vào vị trí i 
-    void insert (int data, int index){
+    void insert (int data, int index){          //O[n]
         Node *q;
         Node *current = head;
         q = new Node;
@@ -70,7 +70,7 @@ public:
     }   
 
     // Xóa phần tử đầu
-    int deleteF (){
+    int deleteF (){                              //O[1]
         Node *current = head;
         head = head->next;
         int x = current->data;
@@ -79,7 +79,7 @@ public:
     }
 
     // Xóa phần tử cuối
-    int deleteL (){
+    int deleteL (){                               //O[n]
         Node *current = head;
         while (current->next !=NULL){
             current = current->next;
@@ -90,7 +90,7 @@ public:
         
     }
 
-    // Xóa vị trí i
+    // Xóa vị trí i                               //O[n]
     void deletE (int index){
         Node *current = head;
         Node *q;
@@ -104,7 +104,7 @@ public:
     }
 
     // Duyệt xuôi
-    void printF(){
+    void printF(){                                //O[n]
         Node *current = head;
         while(current != NULL){
             cout<< current->data<<" ";
@@ -113,7 +113,7 @@ public:
     }
 
     // Duyệt ngược
-    void printB(){
+    void printB(){                                //O[n]
         printBackward(head);
     }
      bool empty(){

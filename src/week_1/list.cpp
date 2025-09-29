@@ -2,7 +2,7 @@
 using namespace std;
 struct List {
     int size;  
-    int a[100] ;
+    int a[] ;
 
     List() {
     size = 0;
