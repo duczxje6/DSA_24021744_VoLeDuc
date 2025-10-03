@@ -7,6 +7,7 @@ struct Node {
 class LinkedList {
 private:
     Node* head; 
+    Node* tail;
     void printBackward(Node *q){
         if(q == NULL){
             return;
@@ -17,6 +18,7 @@ private:
 public: 
     LinkedList() {
         head = NULL;
+        tail = NULL;
     }
     // Truy cập
     int search (int index){                   //O[n]
@@ -27,11 +29,7 @@ public:
     return  current->data ;  
     }   
     int searchLast (){                        //O[n]
-        Node *current = head;
-        while (current ->next != NULL){
-            current = current->next;
-        }
-        return current->data;
+        return tail->data;
     }
 
     // Chèn phần tử vào đầu
@@ -41,19 +39,17 @@ public:
         q ->data = data ;
         q ->next = head;
         head = q;
+        if (tail = NULL) tail = q;
     }
 
     // Chèn phần tử vào cuối                    
     void insertL (int data){                   //O[n]
         Node *q;
-        Node *current = head;
         q = new Node;
         q ->data = data;
         q ->next = NULL; 
-        while (current->next != NULL){
-            current = current ->next;
-        }
-        current->next = q;     
+        tail->next = q;
+        tail = q;
     }
 
     // Chèn vào vị trí i 
@@ -67,6 +63,7 @@ public:
         }
         q->next = current->next;
         current->next = q;
+        if (q->next = NULL) tail = q;
     }   
 
     // Xóa phần tử đầu
