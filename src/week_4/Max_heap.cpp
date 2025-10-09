@@ -64,10 +64,10 @@ struct Priority_Queue{
         return heap.size;
     }
 
-    void insert(int data){
-        heap.size++ ; 
-        heap.a[heap.size-1] = data;
-        heap.swim(heap.size-1) ;
+   void insert(int data) {
+        heap.a.push_back(data);
+        heap.size++;
+        heap.swim(heap.size - 1);
     }
 
     int max(){
@@ -75,8 +75,11 @@ struct Priority_Queue{
     }
 
     int delMax(){
-        heap.sink(heap.a[0]);
+        int max = heap.a[0];
+        swap(heap.a[0], heap.a[heap.size-1]);
         heap.size--;
+        heap.sink(0);
+        return max;
     }
     void print(){
         heap.printArray();

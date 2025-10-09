@@ -90,6 +90,130 @@ int binarySearch(int arr[], int l, int r, int x) {
   // Nếu không tìm thấy
   return -1;
 }
+// Merge Sort      O[nlogn]
+struct Item {
+    int key;
+
+
+// Hàm trộn 2 mảng con đã sắp xếp: A[a..c], A[c+1..b]
+void Merge(Item A[], int a, int c, int b) {
+    int i = a;
+    int j = c + 1;
+    int k = 0;
+    int n = b - a + 1;
+
+    Item* B = new Item[n];  // mảng tạm để chứa kết quả trộn
+
+    // Trộn hai nửa
+    while (i < c + 1 && j < b + 1) {
+        if (A[i].key < A[j].key)
+            B[k++] = A[i++];
+        else
+            B[k++] = A[j++];
+    }
+
+    // Sao chép phần còn lại của nửa 1
+    while (i < c + 1)
+        B[k++] = A[i++];
+
+    // Sao chép phần còn lại của nửa 2
+    while (j < b + 1)
+        B[k++] = A[j++];
+
+    // Ghi ngược kết quả về lại A
+    i = a;
+    for (k = 0; k < n; k++)
+        A[i++] = B[k];
+
+    delete[] B;
+}
+
+void MergeSort(Item A[], int a, int b)
+{
+    if (a<b){
+        int c = (a+b)/2;
+        MergeSort(A, a, c);
+        MergeSort(A, c+1, b);
+        Merge(A, a, c, b);
+    }
+}
+// Quick Sort      O[nlogn] 
+void Partition(Item A[], int a, int b, int &k) {
+    int pivot = A[a].key;
+    int left = a + 1;
+    int right = b;
+
+    do {
+        while ((left <= right) && (A[left].key <= pivot))
+            left++;
+        while ((left <= right) && (A[right].key > pivot))
+            right--;
+        if (left < right) {
+            swap(A[left], A[right]);
+            left++;
+            right--;
+        }
+    } while (left <= right);
+
+    swap(A[a], A[right]);
+    k = right;
+}
+
+void QuickSort(Item A[], int a, int b) {
+    if (a < b) {
+        int k;
+        Partition(A, a, b, k);
+        if (a <= k - 1)
+            QuickSort(A, a, k - 1);
+        if (k + 1 <= b)
+            QuickSort(A, k + 1, b);
+    }
+}
+
+void print(Item A[], int n) {
+    for (int i = 0; i < n; i++)
+        cout << A[i].key << " ";
+    cout << endl;
+}
+
+
+// Heap sort       O[nlogn]
+// Hàm ShiftDown: Duy trì tính chất heap cho cây con có gốc tại a
+void ShiftDown(Item A[], int a, int b)
+{
+    int i = a;
+    int j = 2 * i + 1;   // con trái
+    while (j <= b)
+    {
+        int k = j + 1;   // con phải
+        if (k <= b && A[k].key < A[j].key)
+            j = k;       // chọn con nhỏ hơn
+        if (A[i].key > A[j].key)
+        {
+            swap(A[i], A[j]);
+            i = j;
+            j = 2 * i + 1;
+        }
+        else break;
+    }
+}
+
+// Hàm HeapSort
+void HeapSort(Item A[], int n)
+{
+    //  Xây dựng heap ban đầu
+    for (int i = n / 2 - 1; i >= 0; i--)
+        ShiftDown(A, i, n - 1);
+
+    //  Trích phần tử nhỏ nhất dần dần
+    for (int i = n - 1; i >= 1; i--)
+    {
+        swap(A[0], A[i]);
+        ShiftDown(A, 0, i - 1);
+    }
+}
+
+};
 
 // Hàm xuất mảng 
 void printArray(int arr[], int size)
@@ -123,4 +247,38 @@ int main() {
     printArray(arr3, n); cout<<endl;
 
     return 0;
+
+
+
+    int arr[] = {45, 12, 7, 23, 89, 34, 2, 17};
+    int n = sizeof(arr) / sizeof(arr[0]);
+    Item it;
+    // Chuyển sang mảng Item
+    Item A1[100], A2[100], A3[100];
+    for (int i = 0; i < n; i++) {
+        A1[i].key = arr[i];
+        A2[i].key = arr[i];
+        A3[i].key = arr[i];
+    }
+
+    cout << "Mang ban dau: ";
+    it.print(A1, n);
+
+    // Merge Sort
+    it.MergeSort(A1, 0, n - 1);
+    cout << "Sau Merge Sort: ";
+    it.print(A1, n);
+
+    // Quick Sort
+    it.QuickSort(A2, 0, n - 1);
+    cout << "Sau Quick Sort: ";
+    it.print(A2, n);
+
+    // Heap Sort
+    it.HeapSort(A3, n);
+    cout << "Sau Heap Sort: ";
+    it.print(A3, n);
+
+    return 0;
+
 }
