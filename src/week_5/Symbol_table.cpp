@@ -10,6 +10,43 @@ public:
     bool isEmpty(){ // Kiểm tra bảng ký hiệu có rỗng không
         return keys.size() == 0;
     }
+    struct Item{
+        int key;
+// Quick Sort      O[nlogn] 
+void Partition(Item A[], int a, int b, int &k) {
+    int pivot = A[a].key;
+    int left = a + 1;
+    int right = b;
+
+    do {
+        while ((left <= right) && (A[left].key <= pivot))
+            left++;
+        while ((left <= right) && (A[right].key > pivot))
+            right--;
+        if (left < right) {
+            swap(A[left], A[right]);
+            left++;
+            right--;
+        }
+    } while (left <= right);
+
+    swap(A[a], A[right]);
+    k = right;
+}
+
+void QuickSort(Item A[], int a, int b) {
+    if (a < b) {
+        int k;
+        Partition(A, a, b, k);
+        if (a <= k - 1)
+            QuickSort(A, a, k - 1);
+        if (k + 1 <= b)
+            QuickSort(A, k + 1, b);
+    }
+}
+    }
+    
+       
     // Hàm thêm ký hiệu mới
     void put(Key key, Value val){
         keys.push_back(key);
@@ -24,11 +61,9 @@ public:
         return false;
     }
     Value get(Key key){ // Lấy giá trị tương ứng với ký hiệu
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] == key){
+            if(contains(key)){
                 return vals[i];
             }
-        }
         return Value() // Trả về giá trị mặc định nếu không tìm thấy 
     }
     void deleteKey(Key key){ // Xóa ký hiệu và giá trị tương ứng
@@ -79,7 +114,7 @@ public:
         }
         return ceiling; 
     }
-    int rank(Key key){
+    int rank(Key key){           //ý tưởng binary search
         int rank = 0;
         for(int i = 0; i < keys.size(); i++){
             if(keys[i] < key){
