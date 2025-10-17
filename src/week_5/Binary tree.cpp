@@ -20,8 +20,8 @@ if (root!= NULL){
 }
 template <class Item>
 void Inorder(Node <Item> * root, void f (Item &)){
-  if (root!= NULL){
-   Inorder (left ->root, f);
+if (root!= NULL){
+  Inorder (left ->root, f);
   f (root ->data);
   Inorder (right ->root, f);
   }
@@ -29,7 +29,7 @@ void Inorder(Node <Item> * root, void f (Item &)){
 
 template <class Item>
 void Postorder(Node <Item> * root, void f (Item &)){
-  if (root!= NULL){
+if (root!= NULL){
   Postorder (left ->root, f);
   Postorder (right ->root, f);
   f (root-> data);
