@@ -1,160 +1,215 @@
 #include <iostream>
-using namespace std;
 #include <vector>
+#include <algorithm>
+#include <stdexcept>
+#include <string>
+
+using namespace std;
 template <class Key, class Value>
-class Symbol_table{
+class Symbol_table {
 private:
-    vector<Key> keys; // Mảng chứa các ký hiệu
-    vector<Value> vals; // Mảng chứa các giá trị tương ứng
-public:
-    bool isEmpty(){ // Kiểm tra bảng ký hiệu có rỗng không
-        return keys.size() == 0;
-    }
-    struct Item{
-        int key;
-// Quick Sort      O[nlogn] 
-void Partition(Item A[], int a, int b, int &k) {
-    int pivot = A[a].key;
-    int left = a + 1;
-    int right = b;
-
-    do {
-        while ((left <= right) && (A[left].key <= pivot))
-            left++;
-        while ((left <= right) && (A[right].key > pivot))
-            right--;
-        if (left < right) {
-            swap(A[left], A[right]);
-            left++;
-            right--;
-        }
-    } while (left <= right);
-
-    swap(A[a], A[right]);
-    k = right;
-}
-
-void QuickSort(Item A[], int a, int b) {
-    if (a < b) {
-        int k;
-        Partition(A, a, b, k);
-        if (a <= k - 1)
-            QuickSort(A, a, k - 1);
-        if (k + 1 <= b)
-            QuickSort(A, k + 1, b);
-    }
-}
-    }
+    vector<Key> keys;  
+    vector<Value> vals; 
     
-       
-    // Hàm thêm ký hiệu mới
-    void put(Key key, Value val){
-        keys.push_back(key);
-        vals.push_back(val);    
-    }
-    bool contains(Key key){ // Kiểm tra ký hiệu có tồn tại không
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] == key){
-                return true;
+    int find_rank(const Key& key) const {
+        int low = 0;
+        int high = keys.size() - 1;
+        int rank = keys.size(); // Trường hợp key lớn hơn tất cả
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+
+            if (key <= keys[mid]) {
+                rank = mid; 
+                high = mid - 1;
+            } else {
+                low = mid + 1; 
             }
         }
-        return false;
+        return rank;
     }
-    Value get(Key key){ // Lấy giá trị tương ứng với ký hiệu
-            if(contains(key)){
-                return vals[i];
-            }
-        return Value() // Trả về giá trị mặc định nếu không tìm thấy 
+public:
+    bool isEmpty() const { // O(1)
+        return keys.empty();
     }
-    void deleteKey(Key key){ // Xóa ký hiệu và giá trị tương ứng
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] == key){
-                keys.erase(keys.begin() + i);
-                vals.erase(vals.begin() + i);
-                return;
-            }
-        }
-    }
-    int size(){ // Trả về số lượng ký hiệu trong bảng
+
+    int size() const { // O(1)
         return keys.size();
     }
-    Key min(){
-        Key min = keys[0];
-        for(int i = 1; i < keys.size(); i++){
-            if(keys[i] < min){
-                min = keys[i];  
-    }
+    void put(const Key& key, const Value& val) {
+        int i = find_rank(key);
+        if (i < keys.size() && keys[i] == key) {
+            vals[i] = val;
+            return;
         }
-        return min; 
+        
+        keys.insert(keys.begin() + i, key);
+        vals.insert(vals.begin() + i, val);
     }
-    Key max(){  
-        Key max = keys[0];
-        for(int i = 1; i < keys.size(); i++){
-            if(keys[i] > max){
-                max = keys[i];  
-            }
-        }
-        return max; 
+    bool contains(const Key& key) const {
+        int i = find_rank(key);
+        return i < keys.size() && keys[i] == key;
     }
-    Key floor(Key key){        // lon nhat be hon hoac bang key
-        Key floor = keys[0];
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] <= key && keys[i] > floor){
-                floor = keys[i];  
-            }
+    Value get(const Key& key) const {
+        int i = find_rank(key);
+        
+        if (i < keys.size() && keys[i] == key) {
+            return vals[i];
         }
-        return floor; 
-    }       
-    Key ceiling(Key key){       // nho nhat lon hon hoac bang key
-        Key ceiling = keys[0];
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] >= key && keys[i] < ceiling){   
-                ceiling = keys[i];  
-            }
-        }
-        return ceiling; 
+        
+        cout<< "Key not found: " << key << endl;
+        throw std::out_of_range("Key not found in Symbol Table.");
     }
-    int rank(Key key){           //ý tưởng binary search
-        int rank = 0;
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] < key){
-                rank++;  
-            }
+    void deleteKey(const Key& key) {
+        int i = find_rank(key);
+        
+        if (i < keys.size() && keys[i] == key) {
+            keys.erase(keys.begin() + i);
+            vals.erase(vals.begin() + i);
         }
-        return rank; 
     }
-    key select(int k){
+    Key min() const { 
+        if (isEmpty()) throw std::out_of_range("Symbol Table is empty.");
+        return keys.front();
+    }
+    Key max() const { 
+        if (isEmpty()) throw std::out_of_range("Symbol Table is empty.");
+        return keys.back();
+    }
+    Key floor(const Key& key) const {
+        int i = find_rank(key); 
+
+        if (i < keys.size() && keys[i] == key) {
+            return keys[i]; 
+        }
+        
+        if (i == 0) {
+            throw std::out_of_range("No key less than or equal to floor key.");
+        }
+        
+        return keys[i - 1]; 
+    } 
+    Key ceiling(const Key& key) const {
+        int i = find_rank(key); 
+
+        if (i < keys.size()) {
+            return keys[i]; 
+        }
+        
+        throw std::out_of_range("No key greater than or equal to ceiling key.");
+    }
+    int rank(const Key& key) const { 
+        return find_rank(key);
+    }
+    Key select(int k) const {
+        if (k < 0 || k >= size()) {
+            throw std::out_of_range("Rank k is out of bounds.");
+        }
         return keys[k];
     }
-    void deleteMin(){
-        Key minKey = min();
-        deleteKey(minKey);
+    
+    void deleteMin() { // O(N)
+        if (!isEmpty()) {
+            keys.erase(keys.begin());
+            vals.erase(vals.begin());
+        }
     }
-    void deleteMax(){
-        Key maxKey = max();
-        deleteKey(maxKey);
+    
+    void deleteMax() { // O(1)
+        if (!isEmpty()) {
+            keys.pop_back();
+            vals.pop_back();
+        }
     }
-    int size(Key lo, Key hi){   
-        int count = 0;
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] >= lo && keys[i] <= hi){
-                count++;  
+    int size(const Key& lo, const Key& hi) const { 
+        if (lo > hi) return 0;
+        
+        int start_index = find_rank(lo); 
+        int low = 0;
+        int high = keys.size() - 1;
+        int end_index = keys.size();
+
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
+            if (hi < keys[mid]) {
+                end_index = mid;
+                high = mid - 1;
+            } else {
+                low = mid + 1;
             }
         }
-        return count; 
+        
+        return end_index - start_index;
     }
-    Iterable<Key> keys(Key lo, Key hi){
+    vector<Key> keys_in_range(const Key& lo, const Key& hi) const {
         vector<Key> rangeKeys;
-        for(int i = 0; i < keys.size(); i++){
-            if(keys[i] >= lo && keys[i] <= hi){
-                rangeKeys.push_back(keys[i]);  
+        
+        int start_index = find_rank(lo);
+        
+        for (int i = start_index; i < keys.size(); ++i) {
+            if (keys[i] > hi) {
+                break;
             }
+            rangeKeys.push_back(keys[i]);
         }
-        return rangeKeys; 
+        return rangeKeys;
     }
-    Iterable<Key> keys(){       
-        return keys; 
+    const vector<Key>& get_keys() const {
+        return keys;
     }
 };
-
+int main() {
+    Symbol_table<string, int> st;
+    // Thao tác put (chèn/cập nhật)
+    st.put("S", 0);
+    st.put("E", 1);
+    st.put("A", 2);
+    st.put("R", 3);
+    st.put("C", 4);
+    st.put("H", 5);
+    st.put("E", 6); // Cập nhật E (giá trị mới là 6)
+    st.put("X", 7);
     
+    cout << "\nKich thuoc sau khi chen: " << st.size() << endl;
+
+    // In ra các keys đã sắp xếp
+    cout << "Cac Keys hien tai (da sap xep): ";
+    for (const auto& key : st.get_keys()) {
+        cout << key << " ";
+    }
+    cout << " (Thứ tự: A C E H R S X)" << endl;
+
+    // --- Kiem tra thao tac O(log N) ---
+    cout << "\n--- Kiem tra O(log N) ---" << endl;
+    try {
+        cout << "Gia tri cho 'E': " << st.get("E") << endl; // 6
+        cout << "Key 'Z' ton tai? " << (st.contains("Z") ? "Co" : "Khong") << endl;
+        
+        // Thao tac Floor/Ceiling
+        cout << "Floor cua 'F' (<= 'F'): " << st.floor("F") << endl; // E
+        cout << "Ceiling cua 'F' (>= 'F'): " << st.ceiling("F") << endl; // H
+        
+        // Thao tac Rank/Select
+        cout << "Rank cua 'H' (So luong key < 'H'): " << st.rank("H") << endl; // 3 (A, C, E)
+        cout << "Key tai Rank 2 (Key thu 3): " << st.select(2) << endl; // E
+        
+        // Thao tac Size trong khoang
+        cout << "So luong key trong khoang ['C', 'S']: " << st.size("C", "S") << endl; // 5 (C, E, H, R, S)
+
+    } catch (const std::out_of_range& e) {
+        cerr << "Loi: " << e.what() << endl;
+    }
+    
+    cout << "\n--- Kiem tra xoa (O(N)) ---" << endl;
+    st.deleteMin(); // Xóa A
+    st.deleteKey("R"); // Xóa R
+
+    cout << "Kich thuoc sau khi xoa A va R: " << st.size() << endl;
+    cout << "Keys con lai: ";
+    for (const auto& key : st.get_keys()) {
+        cout << key << " ";
+    }
+    cout << " (Thứ tự: C E H S X)" << endl;
+
+    return 0;
+}
